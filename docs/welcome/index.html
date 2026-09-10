@@ -46,7 +46,7 @@
       status.textContent = "This link did not work";
       status.className = "bad";
       title.textContent = "Ask for a new invitation";
-      lead.textContent = decodeURIComponent(err.replace(/\\+/g, " ")) + ". Invitation links expire and can only be used once — ask the person who invited you to send another, or just sign in from Orb-it with your email.";
+      lead.textContent = decodeURIComponent(err.replace(/\+/g, " ")) + ". Invitation links expire and can only be used once — ask the person who invited you to send another, or just sign in from Orb-it with your email.";
       steps.hidden = false;
       return;
     }
