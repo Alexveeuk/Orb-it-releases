@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orb-it account</title>
+<style>
+  :root { color-scheme: light dark; --ink:#101828; --muted:#475467; --line:#e1e5ec; --bg:#f7f8fa; --card:#fff; --accent:#1e5eff; --ok:#067647; --bad:#b42318; }
+  @media (prefers-color-scheme: dark) { :root { --ink:#eef2f8; --muted:#b4bdcc; --line:#273043; --bg:#0f1420; --card:#161c2a; --accent:#6e96ff; --ok:#6ce9a6; --bad:#f97066; } }
+  body { margin:0; background:var(--bg); color:var(--ink); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 520px; margin: 12vh auto; padding: 0 24px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:28px 28px 24px; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  p { margin: 0 0 12px; color: var(--muted); }
+  ol { margin: 8px 0 16px; padding-left: 22px; color: var(--ink); }
+  li { margin-bottom: 6px; }
+  .ok { color: var(--ok); font-weight: 600; }
+  .bad { color: var(--bad); font-weight: 600; }
+  .small { font-size: 13px; }
+  code { background: rgba(127,127,127,.15); padding: 1px 5px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<main><div class="card" id="card">
+  <p class="ok" id="status">Checking the link…</p>
+  <h1 id="title">Orb-it</h1>
+  <p id="lead"></p>
+  <ol id="steps" hidden>
+    <li>Open <strong>Orb-it</strong> on your PC (Settings → General → Account).</li>
+    <li>Type this email address and press <strong>Send code</strong>.</li>
+    <li>Enter the 6-digit code from the email. That's it — there is no password.</li>
+  </ol>
+  <p class="small">You can close this page. If you were invited to an organisation or a shared repo, it appears in Orb-it after that first sign-in.</p>
+</div></main>
+<script>
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var h = new URLSearchParams(location.hash.replace(/^#/, ""));
+    var get = function (k) { return h.get(k) || q.get(k) || ""; };
+    var status = document.getElementById("status");
+    var title = document.getElementById("title");
+    var lead = document.getElementById("lead");
+    var steps = document.getElementById("steps");
+    var err = get("error_description") || get("error");
+    if (err) {
+      status.textContent = "This link did not work";
+      status.className = "bad";
+      title.textContent = "Ask for a new invitation";
+      lead.textContent = decodeURIComponent(err.replace(/\\+/g, " ")) + ". Invitation links expire and can only be used once — ask the person who invited you to send another, or just sign in from Orb-it with your email.";
+      steps.hidden = false;
+      return;
+    }
+    var type = get("type");
+    status.textContent = "Confirmed";
+    if (type === "invite" || type === "signup") {
+      title.textContent = "Your Orb-it account is ready";
+      lead.textContent = "Your email address is confirmed and your account exists. Nothing else to set up here.";
+    } else if (type === "email_change") {
+      title.textContent = "Email address updated";
+      lead.textContent = "Orb-it will use the new address from now on.";
+    } else {
+      title.textContent = "You're signed in to Orb-it's account service";
+      lead.textContent = "Orb-it itself signs you in with a code, so go back to the app.";
+    }
+    steps.hidden = false;
+  })();
+</script>
+</body>
+</html>
